@@ -28,7 +28,7 @@ app.post("/", (req, res) => {
 });
 
 app.get("/score", (req, res) => {
-  db.query('SELECT score FROM score ORDER BY score DESC LIMIT 1', (err, response) => {
+  db.query('SELECT * FROM score ORDER BY score DESC LIMIT 1', (err, response) => {
     if (err) {
       res.json(err);
     } else {
