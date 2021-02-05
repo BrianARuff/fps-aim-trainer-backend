@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
-express.urlencoded({extended: true});
+express.urlencoded({
+  extended: true
+});
 
 const db = require("./dbConfig").pool;
 
@@ -11,8 +13,10 @@ app.post("/", (req, res) => {
   const score = req.body.score;
   db.query(`insert into score(username, score) values($1, $2) returning *`, [username, score], (err, response) => {
     if (err) {
+      console.log(err);
       res.json(err);
     } else {
+      console.log(response.rows[0])
       return res.json(response.rows[0])
     }
   })
@@ -29,13 +33,15 @@ app.get("/score", (req, res) => {
 })
 
 app.get("/", (req, res) => {
-  db.query("select * from score").then(r => {
-    if (r.rows.length === 0) {
-      return res.json("No scores added yet.");
+  db.query("select * from score", (err, response) => {
+    if (err) {
+      console.log(err);
+      return res.json(err);
     } else {
-      return res.json(r.rows)
+      console.log(response.rows)
+      return res.json(response.rows);
     }
-  });
+  })
 });
 
 
