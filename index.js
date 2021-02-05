@@ -35,7 +35,11 @@ app.get("/score", (req, res) => {
 
 app.get("/", (req, res) => {
   db.query("select * from score").then(r => {
-    return res.json(r.rows)
+    if (r.rows.length === 0) {
+      return res.json("No scores added yet.");
+    } else {
+      return res.json(r.rows)
+    }
   });
 });
 
