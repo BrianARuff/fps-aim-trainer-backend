@@ -1,5 +1,5 @@
-const { Pool, Client } = require('pg')
-const pool = new Pool(process.env.DATABASE_URL || {
+const { Client } = require('pg')
+const client = new Client(process.env.DATABASE_URL || {
   host: 'localhost',
   port: 5432,
   user: 'postgres',
@@ -7,4 +7,4 @@ const pool = new Pool(process.env.DATABASE_URL || {
   database: "fpshighscore"
 });
 
-exports.pool = pool;
+exports.client = client;

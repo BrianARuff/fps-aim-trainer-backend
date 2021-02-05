@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 express.urlencoded({extended: true});
 
-const db = require("./dbConfig").pool;
+const db = require("./dbConfig").client;
 
 
 // db.query("insert into score(score, username) values(-500, 'brian')").then(r1 =>  console.log(r1));
