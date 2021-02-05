@@ -1,11 +1,5 @@
 const { Client } = require('pg')
-const client = new Client({
-  host: 'ec2-18-204-101-137.compute-1.amazonaws.com',
-  port: 5432,
-  user: 'rlcvhlskrpmcfh',
-  password: "37feb2728c7b45601edc48344656c2a74c6bbb91572c58a57a8a176ce1a01c0a",
-  database: "d2vvjqce23rq7o",
-  ssl: true
+const client = new Client({connectionString: "postgres://npilrnjuhmdmth:3223569ad5677f42568f78ba4566dcaa19c75a6b733ae15b418f8cddb1e20498@ec2-3-214-3-162.compute-1.amazonaws.com:5432/d5pdd1laepqj1f"
 });
 
 exports.client = client;
