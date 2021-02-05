@@ -32,7 +32,7 @@ app.get("/score", (req, res) => {
     if (err) {
       res.json(err);
     } else {
-      res.json(response.rows[0]);
+      res.json(response.rows);
     }
   })
 })
