@@ -1,10 +1,15 @@
 const express = require("express");
 const app = express();
 
+// params and body content coming in
 app.use(express.json());
 express.urlencoded({
   extended: true
 });
+
+// cross origin
+const cors = require("cors");
+app.use(cors());
 
 const db = require("./dbConfig").pool;
 
