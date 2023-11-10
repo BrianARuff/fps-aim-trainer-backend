@@ -14,8 +14,8 @@ app.use(cors());
 const db = require("./dbConfig").pool;
 
 app.post("/", (req, res) => {
-  const username = req.body.username;
-  const score = req.body.score;
+  const { username, score } = req.body;
+  
   db.query(`insert into score(username, score) values($1, $2) returning *`, [username, score], (err, response) => {
     if (err) {
       console.log(err);
