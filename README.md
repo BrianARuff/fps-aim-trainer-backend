@@ -1,27 +1,66 @@
-# fps-aim-trainer-backend
+# How to setup fps-aim-trainer-backend database locally (or on a virtual computer through a third party service such as Heroku that allows you to attach databases with your application)
 
-## How to remove unique constraint on heroku and locally.
+## Steps to setup database locally (WSL Ubuntu)
 
-1.  Get contraint name with the following code
+1. `sudo apt-get update`
+2. `sudo apt-get install postgresql postgresql-contrib`
+3. `sudo service postgresql start`
+4. `sudo -u postgres psql -c "SELECT version();"`
 
-        SELECT tc.constraint_name, tc.table_name, kcu.column_name,
+## Create new super user (optional)
 
-          ccu.table_name AS foreign_table_name,
+1. `sudo -u postgres psql`
+2. `CREATE ROLE your_username WITH SUPERUSER LOGIN PASSWORD 'your_password';`
+3. Verify role `\du`
+4. Exit PostgreSQL `q` (if desired)
 
-          ccu.column_name AS foreign_column_name
+## Add Create role, Create DB, Replication, Bypass RLS roles to new super user (optional)
 
-        FROM information_schema.table_constraints AS tc
+1. `sudo -u postgres psql`
+1. `ALTER ROLE brianruff WITH BYPASSRLS CREATEDB CREATEROLE REPLICATION;`
+1. Verify roles with `\du`
+1. Exit PostgreSQL `q` (if desired)
 
-          JOIN information_schema.key_column_usage AS kcu
+## Access psql shell with your user
 
-          ON tc.constraint_name = kcu.constraint_name
+1. psql -U brianruff -d postgres -W
+2. enter the password that assigned to the user
 
-        JOIN information_schema.constraint_column_usage AS ccu
+## Updating pg_hba.conf files - Allows you to access psql shell as different user than root
 
-          ON ccu.constraint_name = tc.constraint_name
+1. change peer to md5 or scram-sha-256
 
-        WHERE constraint_type = 'UNIQUE'
+## Create Database
 
-2.  Get the name of the constraint under the `constraint_name` column returned from the command above. If it's heroku, it will say yourtablename_yourcolumnname_key if you are getting the unique constraint, but if you are doing it locally with postgres then it will say yourcolumnname_unique, so note the difference between key and unique at the end.
+1. `CREATE DATABASE "fps-aim-trainer";`
+2. `\c fps-aim-trainer`
 
-3.      ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+## Create table named "score" (be sure that you are connected to the correct database "fps-aim-trainer" or w/e u named it)
+
+1. `CREATE TABLE score (
+    username VARCHAR(255),
+    score INT
+);`
+
+## Grant User Permission to database
+
+1. `GRANT CONNECT ON DATABASE "fps-aim-trainer" TO new_username;`
+2. `GRANT ALL PRIVILEGES ON TABLE score TO new_username;`
+
+## Create connection string to configure database in dbConfig.js
+
+- example connection string: "postgresql://username:password@localhost:5432/fps-aim-trainer"
+
+# How to run the backend
+
+1. node or nodemon `node index.js`
+
+# How to run the user interface once you have the backend running
+
+1. In the ui folder, runt he index.html file in your browser.
+
+# Running on HTTPS (Ubuntu)
+
+1. create signed certificate with OpenSSL
+   `openssl genrsa -out localhost.key 2048
+openssl req -new -x509 -key localhost.key -out localhost.cert -days 3650 -subj /CN=localhost`
